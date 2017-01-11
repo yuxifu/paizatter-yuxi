@@ -49,3 +49,9 @@ Running `npm test` will run the unit tests with karma.
 ### Project
 - ? What would you like to write tests with? Mocha + Chai + Sinon
 - ? What would you like to write Chai assertions with? Expect
+
+## Create time format filter
+
+1. Install momentjs `npm install --save momentjs`
+2. Run `yo angular-fullstack:filter fromNow` to generate filter code
+3. Use filter
