@@ -1,11 +1,43 @@
 'use strict';
 
 var app = require('../..');
+//var User = require('../user/user.model');
+import User from '../user/user.model';
 import request from 'supertest';
 
 var newThing;
 
 describe('Thing API:', function() {
+
+   var user;
+   before(function() {
+     return User.remove().then(function() {
+       user = new User({
+         name: 'Fake User',
+         email: 'test@test.com',
+         password: 'password'
+       });
+
+       return user.save();
+     });
+   });
+
+   var token;
+   before(function(done) {
+     request(app)
+       .post('/auth/local')
+       .send({
+         email: 'test@test.com',
+         password: 'password'
+       })
+       .expect(200)
+       .expect('Content-Type', /json/)
+       .end(function(err, res) {
+         token = res.body.token;
+         done();
+       });
+   });
+
   describe('GET /api/things', function() {
     var things;
 
@@ -32,6 +64,7 @@ describe('Thing API:', function() {
     beforeEach(function(done) {
       request(app)
         .post('/api/things')
+        .set('authorization', 'Bearer ' + token)
         .send({
           name: 'New Thing',
           info: 'This is the brand new thing!!!'
@@ -80,7 +113,8 @@ describe('Thing API:', function() {
     });
   });
 
-  describe('PUT /api/things/:id', function() {
+  //put and patch: unused
+  /*describe('PUT /api/things/:id', function() {
     var updatedThing;
 
     beforeEach(function(done) {
@@ -158,12 +192,13 @@ describe('Thing API:', function() {
       expect(patchedThing.name).to.equal('Patched Thing');
       expect(patchedThing.info).to.equal('This is the patched thing!!!');
     });
-  });
+});*/
 
   describe('DELETE /api/things/:id', function() {
     it('should respond with 204 on successful removal', function(done) {
       request(app)
         .delete(`/api/things/${newThing._id}`)
+        .set('authorization', 'Bearer ' + token)
         .expect(204)
         .end(err => {
           if(err) {
@@ -176,6 +211,7 @@ describe('Thing API:', function() {
     it('should respond with 404 when thing does not exist', function(done) {
       request(app)
         .delete(`/api/things/${newThing._id}`)
+        .set('authorization', 'Bearer ' + token)
         .expect(404)
         .end(err => {
           if(err) {

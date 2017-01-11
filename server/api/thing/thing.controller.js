@@ -65,7 +65,9 @@ function handleError(res, statusCode) {
 
 // Gets a list of Things
 export function index(req, res) {
-  return Thing.find().sort({_id:-1}).limit(5).exec()
+  return Thing.find().sort({_id: -1})
+    .limit(5)
+    .exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -80,6 +82,7 @@ export function show(req, res) {
 
 // Creates a new Thing in the DB
 export function create(req, res) {
+  req.body.user = req.user; //store user
   return Thing.create(req.body)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
@@ -108,10 +111,24 @@ export function patch(req, res) {
     .catch(handleError(res));
 }
 
+function handleUnauthorized(req, res) {
+  return function(entity) {
+    if(!entity) {
+      return null;
+    }
+    if(entity.user._id.toString() !== req.user._id.toString()) {
+      res.send(403).end();
+      return null;
+    }
+    return entity;
+  };
+}
+
 // Deletes a Thing from the DB
 export function destroy(req, res) {
   return Thing.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))
+    .then(handleUnauthorized(req, res))
     .then(removeEntity(res))
     .catch(handleError(res));
 }

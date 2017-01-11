@@ -7,9 +7,18 @@ export class MainController {
   newThing = '';
 
   /*@ngInject*/
-  constructor($http, $scope, socket) {
+  constructor($http, $scope, socket, Auth) {
     this.$http = $http;
     this.socket = socket;
+    this.Auth = Auth;
+
+    $scope.isLoggedIn = Auth.isLoggedInSync;
+    $scope.getCurrentUser = Auth.getCurrentUserSync;
+    $scope.isMyTweet = function(thing) {
+      return Auth.isLoggedInSync()
+          && thing.user
+          && thing.user._id === Auth.getCurrentUserSync()._id;
+    };
 
     $scope.$on('$destroy', function() {
       socket.unsyncUpdates('thing');

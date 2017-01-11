@@ -11,7 +11,7 @@
     <div class="col-lg-12">
       <h1 class="page-header">Features:</h1>
       <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in $ctrl.awesomeThings">
-        <li><a href="#" uib-tooltip="{{thing.info}}">{{thing.name}}<button type="button" class="close" ng-click="$ctrl.deleteThing(thing)">&times;</button></a></li>
+        <li><a href="#" uib-tooltip="{{thing.info}}">{{thing.name}}<button ng-if="isMyTweet(thing)" type="button" class="close" ng-click="$ctrl.deleteThing(thing)">&times;</button></a></li>
       </ul>
     </div>
   </div>
@@ -26,10 +26,19 @@
     </p>
   </form>
 
-  <div class="row">
-      <div ng-repeat="thing in $ctrl.awesomeThings">
-        {{thing.name}}
+  <div ng-repeat="thing in $ctrl.awesomeThings" class="tweet">
+    <div class="row">
+      <h2 class="col-xs-2">
+        {{thing.user.name}}
+      </h2>
+      <div class="arrow_box col-xs-10">
+        <button ng-if="isMyTweet(thing)" type="button" class="close" ng-click="$ctrl.deleteThing(thing)">&times;</button>
+        <h2 class="message">
+          {{thing.name}}
+        </h2>
+        <span style="float: right;">({{thing.createdAt}})</span>
       </div>
     </div>
-  
+  </div>
+
 </div>
