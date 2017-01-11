@@ -50,7 +50,8 @@ function Socket(socketFactory) {
           array.splice(index, 1, item);
           event = 'updated';
         } else {
-          array.push(item);
+          //array.push(item);
+          array.unshift(item); //add new item at the front
         }
 
         cb(event, item, array);
