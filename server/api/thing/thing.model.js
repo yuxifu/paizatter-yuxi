@@ -14,6 +14,10 @@ var ThingSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  stars: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  }],
 });
 
 ThingSchema.pre('find', function(next) {

@@ -132,3 +132,19 @@ export function destroy(req, res) {
     .then(removeEntity(res))
     .catch(handleError(res));
 }
+
+exports.star = function(req, res) {
+  Thing.update({_id: req.params.id}, {$push: {stars: req.user._id}}, function(err, num){
+    if (err) { return handleError(res)(err); }
+    if(num===0) { return res.send(404).end(); }
+    exports.show(req, res);
+  });
+};
+
+exports.unstar = function(req, res) {
+  Thing.update({_id: req.params.id}, {$pull: {stars: req.user._id}}, function(err, num){
+    if (err) { return handleError(res)(err); }
+    if(num === 0) { return res.send(404).end(); }
+    exports.show(req, res);
+  });
+};
