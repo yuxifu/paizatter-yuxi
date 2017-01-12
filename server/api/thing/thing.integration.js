@@ -9,6 +9,7 @@ var newThing;
 
 describe('Thing API:', function() {
 
+   // Clear users before testing
    var user;
    before(function() {
      return User.remove().then(function() {

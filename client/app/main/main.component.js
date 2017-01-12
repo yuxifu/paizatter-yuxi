@@ -14,6 +14,7 @@ export class MainController {
 
     $scope.isLoggedIn = Auth.isLoggedInSync;
     $scope.getCurrentUser = Auth.getCurrentUserSync;
+
     $scope.isMyTweet = function(thing) {
       return Auth.isLoggedInSync()
           && thing.user
@@ -32,7 +33,7 @@ export class MainController {
   }
 
   $onInit() {
-    this.$http.get('/api/things')
+    this.$http.get('/api/things', {params: {query: this.query}})
       .then(response => {
         this.awesomeThings = response.data;
         this.socket.syncUpdates('thing', this.awesomeThings);
@@ -97,6 +98,7 @@ export default angular.module('paizatterApp.main', [uiRouter])
   .config(routing)
   .component('main', {
     template: require('./main.html'),
+    bindings: { query: "<" },
     controller: MainController
   })
   .name;

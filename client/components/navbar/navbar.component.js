@@ -6,8 +6,17 @@ import angular from 'angular';
 export class NavbarComponent {
   menu = [{
     title: 'Home',
-    state: 'main'
-  }];
+    state: 'main',
+    show: true
+  }, {
+    title: 'Mine',
+    state: 'user',
+    show: false,
+  }, {
+    title: 'Starred',
+    state: 'starred',
+    show: false,
+  }, ];
 
   isCollapsed = true;
 
@@ -17,8 +26,11 @@ export class NavbarComponent {
     this.isLoggedIn = Auth.isLoggedInSync;
     this.isAdmin = Auth.isAdminSync;
     this.getCurrentUser = Auth.getCurrentUserSync;
-  }
 
+    this.getCurrentUserId = function() {
+      return Auth.getCurrentUserSync()._id;
+    }
+  }
 }
 
 export default angular.module('directives.navbar', [])

@@ -29,7 +29,7 @@
   <div ng-repeat="thing in $ctrl.awesomeThings" class="tweet">
     <div class="row">
       <h2 class="col-xs-2">
-        {{thing.user.name}}
+          <a ng-href="/users/{{thing.user._id}}">{{thing.user.name}}</a>
       </h2>
       <div class="arrow_box col-xs-10">
         <button ng-if="isMyTweet(thing)" type="button" class="close" ng-click="$ctrl.deleteThing(thing)">&times;</button>
