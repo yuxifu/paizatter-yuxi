@@ -20,7 +20,7 @@ export class NavbarComponent {
 
   isCollapsed = true;
 
-  constructor(Auth) {
+  constructor($scope, $location, Auth, $state) {
     'ngInject';
 
     this.isLoggedIn = Auth.isLoggedInSync;
@@ -30,6 +30,15 @@ export class NavbarComponent {
     this.getCurrentUserId = function() {
       return Auth.getCurrentUserSync()._id;
     }
+
+    $scope.search = function(keyword) {
+        if ($state.current.controllerAs === 'routeController'){
+          $state.go($state.current.name, {keyword: keyword}, {reload: true});
+        }else{
+          $state.go('main', {keyword: keyword}, {reload: true});
+        }
+    };
+
   }
 }
 

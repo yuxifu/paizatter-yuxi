@@ -1,14 +1,16 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import routing from './main.routes';
+var _ = require('lodash');
 
 export class MainController {
   awesomeThings = [];
   newThing = '';
 
   /*@ngInject*/
-  constructor($http, $scope, socket, Auth) {
+  constructor($http, $scope, $location, socket, Auth) {
     this.$http = $http;
+    this.$location = $location;
     this.socket = socket;
     this.Auth = Auth;
 
@@ -33,6 +35,10 @@ export class MainController {
   }
 
   $onInit() {
+    var keyword = this.$location.search().keyword;
+    if(keyword){
+      this.query = _.merge(this.query, {$text: {$search: keyword}});
+    }
     this.$http.get('/api/things', {params: {query: this.query}})
       .then(response => {
         this.awesomeThings = response.data;

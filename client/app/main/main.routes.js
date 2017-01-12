@@ -5,7 +5,7 @@ export default function routes($stateProvider) {
 
   $stateProvider
     .state('main', {
-      url: '/',
+      url: '/?keyword',
       template: '<main query="routeController.query"></main>',
       controllerAs: "routeController",
       controller: function(query) {
@@ -19,7 +19,7 @@ export default function routes($stateProvider) {
       }
     })
     .state('starred', {
-      url: '/users/:userId/starred',
+      url: '/users/:userId/starred?keyword',
       template: '<main query="routeController.query"></main>',
       controllerAs: "routeController",
       controller: function(query) {
@@ -35,7 +35,7 @@ export default function routes($stateProvider) {
       }
     })
     .state('user', {
-      url: '/users/:userId',
+      url: '/users/:userId?keyword',
       template: '<main query="routeController.query"></main>',
       controllerAs: "routeController",
       controller: function(query) {

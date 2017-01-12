@@ -20,10 +20,13 @@ var ThingSchema = new mongoose.Schema({
   }],
 });
 
+ThingSchema.index({name: 'text'});
+
 ThingSchema.pre('find', function(next) {
   this.populate('user', 'name');
   next();
 });
+
 ThingSchema.pre('findOne', function(next) {
   this.populate('user', 'name');
   next();
