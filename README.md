@@ -1,4 +1,8 @@
-# paizatter
+# paizatter-yuxi
+
+This project is an updated version of
+[Building Twitter-like full-stack web service in 1 hour - MEAN stack development (2)](http://engineering.paiza.io/entry/2015/07/09/154028)
+paizatter(https://github.com/gi-no/paizatter)
 
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 4.1.1.
 
