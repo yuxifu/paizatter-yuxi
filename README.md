@@ -37,23 +37,23 @@ Running `npm test` will run the unit tests with karma.
 `yo angular-fullstack paizatter`
 
 ### Client
-- ? What would you like to write scripts with? Babel
-- ? Would you like to use Flow types with Babel? No
-- ? What would you like to write markup with? HTML
-- ? What would you like to write stylesheets with? Sass
-- ? What Angular router would you like to use? uiRouter
-- ? Would you like to include Bootstrap? Yes
-- ? Would you like to include UI Bootstrap? Yes
+- What would you like to write scripts with? `Babel`
+- Would you like to use Flow types with Babel? `No`
+- What would you like to write markup with? `HTML`
+- What would you like to write stylesheets with? `Sass`
+- What Angular router would you like to use? `uiRouter`
+- Would you like to include Bootstrap? `Yes`
+- Would you like to include UI Bootstrap? `Yes`
 
 ### Server
-- ? What would you like to use for data modeling? Mongoose (MongoDB)
-- ? Would you scaffold out an authentication boilerplate? Yes
-- ? Would you like to include additional oAuth strategies? Google, Facebook, Twitter
-- ? Would you like to use socket.io? Yes
+- What would you like to use for data modeling? `Mongoose (MongoDB)`
+- Would you scaffold out an authentication boilerplate? `Yes`
+- Would you like to include additional oAuth strategies? `Google, Facebook, Twitter`
+- Would you like to use socket.io? `Yes`
 
 ### Project
-- ? What would you like to write tests with? Mocha + Chai + Sinon
-- ? What would you like to write Chai assertions with? Expect
+- What would you like to write tests with? `Mocha + Chai + Sinon`
+- What would you like to write Chai assertions with? `Expect`
 
 ## Create time format filter
 
