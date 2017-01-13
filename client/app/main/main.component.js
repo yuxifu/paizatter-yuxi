@@ -27,7 +27,6 @@ export class MainController {
 
     $scope.isMyStar = function(thing) {
       var isMine = Auth.isLoggedInSync() && thing.stars && thing.stars.indexOf(Auth.getCurrentUserSync()._id) !== -1;
-      //console.log(thing.name     + " is mine:  " + isMine);
       return isMine;
     };
 
@@ -66,6 +65,7 @@ export class MainController {
     }
     this.busy = true;
     var lastId = this.awesomeThings[this.awesomeThings.length - 1]._id;
+    //load next page
     var pageQuery = _.merge(this.query, {
       _id: {
         $lt: lastId
@@ -75,13 +75,13 @@ export class MainController {
       params: {
         query: pageQuery
       }
-  }).then(function(response) {
+    }).then(function(response) {
       this.awesomeThings = this.awesomeThings.concat(response.data);
       this.busy = false;
       if (response.data.length === 0) {
         this.noMoreData = true;
-    }
-}.bind(this));
+      }
+    }.bind(this));
   }
 
   addThing() {
@@ -116,7 +116,7 @@ export class MainController {
   }
 
   unstarThing = function(thing) {
-      var self = this;
+    var self = this;
     this.$http.delete('/api/things/' + thing._id + '/unstar')
       .then(
         function(response) {
@@ -129,9 +129,6 @@ export class MainController {
           console.log(thing.name + " staring failed");
         }
       );
-    //.success(function(newthing){
-    //$scope.awesomeThings[$scope.awesomeThings.indexOf(thing)] = newthing;
-    //});
   }
 
 }

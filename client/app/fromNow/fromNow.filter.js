@@ -6,7 +6,7 @@ var moment = require("moment");
 export function fromNowFilter() {
   return function(input) {
     //return `fromNow filter: ${input}`;
-    return moment(input).fromNow();
+    return moment(input).locale(window.navigator.language).fromNow();
   };
 }
 
