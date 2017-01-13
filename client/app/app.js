@@ -12,6 +12,7 @@ import uiBootstrap from 'angular-ui-bootstrap';
 // import ngMessages from 'angular-messages';
 // import ngValidationMatch from 'angular-validation-match';
 
+import ngInfiniteScroll from 'ng-infinite-scroll';
 
 import {
   routeConfig
@@ -31,8 +32,8 @@ import socket from '../components/socket/socket.service';
 import './app.scss';
 
 angular.module('paizatterApp', [ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter,
-  uiBootstrap, _Auth, account, admin, navbar, footer, main, fromNow, constants, socket, util
-])
+  uiBootstrap, _Auth, account, admin, navbar, footer, main, fromNow, constants, socket, util,
+  ngInfiniteScroll ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
     'ngInject';

@@ -6,6 +6,8 @@ var _ = require('lodash');
 export class MainController {
   awesomeThings = [];
   newThing = '';
+  busy = true;
+  noMoreData = false;
 
   /*@ngInject*/
   constructor($http, $scope, $location, socket, Auth) {
@@ -18,15 +20,15 @@ export class MainController {
     $scope.getCurrentUser = Auth.getCurrentUserSync;
 
     $scope.isMyTweet = function(thing) {
-      return Auth.isLoggedInSync()
-          && thing.user
-          && thing.user._id === Auth.getCurrentUserSync()._id;
+      return Auth.isLoggedInSync() &&
+        thing.user &&
+        thing.user._id === Auth.getCurrentUserSync()._id;
     };
 
-    $scope.isMyStar = function(thing){
-        var isMine = Auth.isLoggedInSync() && thing.stars && thing.stars.indexOf(Auth.getCurrentUserSync()._id)!==-1;
-        //console.log(thing.name     + " is mine:  " + isMine);
-        return isMine;
+    $scope.isMyStar = function(thing) {
+      var isMine = Auth.isLoggedInSync() && thing.stars && thing.stars.indexOf(Auth.getCurrentUserSync()._id) !== -1;
+      //console.log(thing.name     + " is mine:  " + isMine);
+      return isMine;
     };
 
     $scope.$on('$destroy', function() {
@@ -36,18 +38,54 @@ export class MainController {
 
   $onInit() {
     var keyword = this.$location.search().keyword;
-    if(keyword){
-      this.query = _.merge(this.query, {$text: {$search: keyword}});
+    if (keyword) {
+      this.query = _.merge(this.query, {
+        $text: {
+          $search: keyword
+        }
+      });
     }
-    this.$http.get('/api/things', {params: {query: this.query}})
+    this.$http.get('/api/things', {
+        params: {
+          query: this.query
+        }
+      })
       .then(response => {
         this.awesomeThings = response.data;
         this.socket.syncUpdates('thing', this.awesomeThings);
+        if (this.awesomeThings.length < 10) {
+          this.noMoreData = true;
+        }
+        this.busy = false;
       });
   }
 
+  nextPage = function() {
+    if (this.busy) {
+      return;
+    }
+    this.busy = true;
+    var lastId = this.awesomeThings[this.awesomeThings.length - 1]._id;
+    var pageQuery = _.merge(this.query, {
+      _id: {
+        $lt: lastId
+      }
+    });
+    this.$http.get('/api/things', {
+      params: {
+        query: pageQuery
+      }
+  }).then(function(response) {
+      this.awesomeThings = this.awesomeThings.concat(response.data);
+      this.busy = false;
+      if (response.data.length === 0) {
+        this.noMoreData = true;
+    }
+}.bind(this));
+  }
+
   addThing() {
-    if(this.newThing) {
+    if (this.newThing) {
       this.$http.post('/api/things', {
         name: this.newThing
       });
@@ -59,43 +97,41 @@ export class MainController {
     this.$http.delete(`/api/things/${thing._id}`);
   }
 
-  starThing = function(thing, awesomeThings) {
-      console.log(thing.name + " staring by " + this.Auth.getCurrentUserSync().email);
-      console.log("this before staring: "     + this);
-      this.$http.put('/api/things/' + thing._id + '/star')
-        .then(
-            function(response){
-                // success callback
-                console.log(thing.name     + " staring OK");
-                console.log(response);
-                if(awesomeThings){
-                    console.log("awesomeThings: "     + awesomeThings);
-                    awesomeThings[awesomeThings.indexOf(thing)] = response.data;
-                }
-            },
-            function(response){
-                // failure callback
-                console.log(thing.name     + " staring failed");
-            }
-        );
+  starThing = function(thing) {
+    var self = this;
+    this.$http.put('/api/things/' + thing._id + '/star')
+      .then(
+        function(response) {
+          // success callback
+          console.log(thing.name + " staring OK");
+          if (self.awesomeThings) {
+            self.awesomeThings[self.awesomeThings.indexOf(thing)] = response.data;
+          }
+        },
+        function(response) {
+          // failure callback
+          console.log(thing.name + " staring failed");
+        }
+      );
   }
 
-  unstarThing = function(thing, awesomeThings) {
-      this.$http.delete('/api/things/' + thing._id + '/unstar')
-        .then(
-            function(response){
-                // success callback
-                console.log(thing.name     + " unstaring OK");
-                awesomeThings[awesomeThings.indexOf(thing)] = response.data;
-            },
-            function(response){
-                // failure callback
-                console.log(thing.name     + " staring failed");
-            }
-        );
-        //.success(function(newthing){
-        //$scope.awesomeThings[$scope.awesomeThings.indexOf(thing)] = newthing;
-        //});
+  unstarThing = function(thing) {
+      var self = this;
+    this.$http.delete('/api/things/' + thing._id + '/unstar')
+      .then(
+        function(response) {
+          // success callback
+          console.log(thing.name + " unstaring OK");
+          self.awesomeThings[self.awesomeThings.indexOf(thing)] = response.data;
+        },
+        function(response) {
+          // failure callback
+          console.log(thing.name + " staring failed");
+        }
+      );
+    //.success(function(newthing){
+    //$scope.awesomeThings[$scope.awesomeThings.indexOf(thing)] = newthing;
+    //});
   }
 
 }
@@ -104,7 +140,9 @@ export default angular.module('paizatterApp.main', [uiRouter])
   .config(routing)
   .component('main', {
     template: require('./main.html'),
-    bindings: { query: "<" },
+    bindings: {
+      query: "<"
+    },
     controller: MainController
   })
   .name;

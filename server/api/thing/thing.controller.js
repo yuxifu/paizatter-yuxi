@@ -67,7 +67,7 @@ function handleError(res, statusCode) {
 export function index(req, res) {
   var query = req.query.query && JSON.parse(req.query.query);
   return Thing.find(query).sort({_id: -1})
-    .limit(5)
+    .limit(10)
     .exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
